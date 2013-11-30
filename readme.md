@@ -1,8 +1,8 @@
 # Scribe for Laravel
 
-A Laravel package for building a file-based blog. This is a not a "static file" blogging system that crunches files together into raw HTML, rather it's a blogging system that just doesn't use a database. Some technical know-how is still required by the user, but this library aims to take most of the work out of working w/ the files.
+A Laravel package for building a file-based blog. This is a not a "static file" blogging system that crunches files together into raw HTML, rather it's a blogging system that just doesn't use a database. Some technical know-how is still required by the user, but this library aims to take most of the work out of the process.
 
-WARNING: This is my first package using Composer and Laravel 4. Please forgive me while I learn.
+**WARNING: This is my first package using Composer and Laravel 4. Please forgive me while I learn.**
 
 ## Install
 
@@ -14,7 +14,7 @@ Normal composer install.
 
 The config file contains a setting for where your content files will be located, which by default is ``app/views/scribe/``.  You can create any folder structure you want, as nested as you want.  You may consider ``posts/`` and ``pages/``, for example, to organize your content.
 
-Inside these folders is where you'll put your files.  Each file represents a single "post" or "page".  These files are processed using the [Kurenai](https://github.com/daylerees/kurenai) library by Dayle Rees, allowing you to use HTML or Markdown.  Here is a sample file:
+Inside these folders is where you'll put your files.  Each file represents a single "post" or "page".  These files are processed using the [Kurenai](https://github.com/daylerees/kurenai) library by Dayle Rees, which allows you to use HTML or Markdown. Here is a sample file which shows some basic field/value pairs, followed by some text:
 
 ```
 title: Vulputate Dapibus Vehicula Magna
@@ -23,7 +23,7 @@ subtitle: Cras justo odio, dapibus ac facilisis in, egestas eget quam.
 Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum.
 ```
 
-You are free to create any fields you wish above the dashed lines.  Also, the system will automatically determine which coding method to use (Markdown or HTML) based on the file extension.  Use ``.md`` for Markdown or ``.html`` for HTML.
+You are free to create any fields you wish above the dashed lines.  Also, the system will automatically determine which coding method to use (Markdown or HTML) for display based on the file extension.  Use ``.md`` for Markdown or ``.html`` for HTML.
 
 ### Using Your Files
 
