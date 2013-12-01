@@ -50,7 +50,7 @@ $posts = Scribe::where('category', '=', 'post')->where('tag', '=', 'foobar')->ta
 
 Just note that the fields used in the ``where()`` and ``order_by()`` methods are dependant on those fields being available in your files!  If a file does not have the field in question a default of ``null`` will be assumed.
 
-The search results will deliver an object (or array of objects) that contains all the information available from the file.  All the meta data will be object properties, while to get the actual text you will have to invoke the ``text()`` method.
+The search results will deliver an object (or array of objects) that contains all the information available from the file.  All the meta data will be object properties, but the actual text will require the ``text()`` method.
 
 ```php
 $title = $file->title; // object property
