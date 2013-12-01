@@ -55,24 +55,40 @@ class Search
                 // foreach orderby...
                 foreach ($query->order_bys as $order_by)
                 {
-                    // sort
-                    if (strtolower($order_by['value']) == 'desc')
-                    {
-                        /*
-                        usort($results, function($a, $b) use ($order_by['field'], $order_by['value'])
-                        {
+                    $field = $order_by['field']; // as own var bc usort has issues w/ array value
+                    $value = strtolower($order_by['value']);
 
-                        });
-                        */
+                    // skip bogus sorts...
+                    if (!in_array($value, array('asc', 'desc')) or is_array($field))
+                    {
+                        break;
                     }
+
+                    // if sort desc...
+                    if ($value == 'desc')
+                    {
+                        usort($results, function($a, $b) use ($field)
+                        {
+                            return $a->$field > $b->$field ? 0 : 1;
+                        });
+                    }
+
+                    // else if sort asc...
                     else
                     {
-
+                        usort($results, function($a, $b) use ($field)
+                        {
+                            return $a->$field > $b->$field ? 1 : 0;
+                        });
                     }
                 }
 
-                // slice the array
-                $results = array_slice($results, $query->skip, $query->take);
+                // if skip or take options...
+                if ($query->skip or $query->take)
+                {
+                    // slice the array
+                    $results = array_slice($results, $query->skip, $query->take);
+                }
 
                 // if "first"...
                 if ($query->take === 1) // strict match is deliberate
@@ -98,26 +114,48 @@ class Search
      */
     protected static function compare($value1, $operator, $value2)
     {
-        switch (strtolower($operator))
+        // build function
+        $compare = function($alpha, $operator, $beta) {
+            switch (strtolower($operator))
+            {
+                case 'like':
+                    return preg_match('/'.$beta.'/i', $alpha); // this might need some work
+                    break;
+                case '=':
+                    return $alpha == $beta;
+                    break;
+                case '!=':
+                    return $alpha != $beta;
+                    break;
+                case '<':
+                    return $alpha < $beta;
+                    break;
+                case '>':
+                    return $alpha > $beta;
+                    break;
+                default:
+                    return false;
+                    break;
+            }
+        };
+
+        // value1 might be an array...
+        if (is_array($value1))
         {
-            case 'like':
-                return preg_match('/'.$value2.'/i', $value1); // this might need some work
-                break;
-            case '=':
-                return $value1 == $value2;
-                break;
-            case '!=':
-                return $value1 != $value2;
-                break;
-            case '<':
-                return $value1 < $value2;
-                break;
-            case '>':
-                return $value1 > $value2;
-                break;
-            default:
-                return false;
-                break;
+            $test = false;
+            foreach ($value1 as $value)
+            {
+                if ($compare($value, $operator, $value2))
+                {
+                    $test = true;
+                }
+            }
+            return $test;
+        }
+        // else if normal string...
+        else
+        {
+            return $compare($value1, $operator, $value2);
         }
     }
 }
