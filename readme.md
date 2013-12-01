@@ -23,7 +23,7 @@ subtitle: Cras justo odio, dapibus ac facilisis in, egestas eget quam.
 Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum.
 ```
 
-You are free to create any fields you wish above the dashed lines.  Also, the system will automatically determine which coding method to use (Markdown or HTML) for display based on the file extension.  Use ``.md`` for Markdown or ``.html`` for HTML.
+You are free to create any fields you wish above the dashed line.  Below the dashed line you will write the primary text, which can be written in Markdown or HTML.  The system will automatically translate either of these two coding methods based on the file extension, ``.md`` for Markdown or ``.html`` for HTML.
 
 ### Using Your Files
 
@@ -50,7 +50,13 @@ $posts = Scribe::where('category', '=', 'post')->where('tag', '=', 'foobar')->ta
 
 Just note that the fields used in the ``where()`` and ``order_by()`` methods are dependant on those fields being available in your files!  If a file does not have the field in question a default of ``null`` will be assumed.
 
-The search results will deliver an object that contains all the information available from the file.
+The search results will deliver an object (or array of objects) that contains all the information available from the file.  All the meta data will be object properties, while to get the actual text you will have to invoke the ``text()`` method.
+
+```php
+$title = $file->title; // object property
+$date = $file->date; // object property
+$text = $file->text(); // object method to translate from Markdown or HTML
+```
 
 ### Under the Hood
 
