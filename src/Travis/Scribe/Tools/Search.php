@@ -21,7 +21,7 @@ class Search
      */
     public static function run($query)
     {
-        // hash
+        // name
         $cache = Cache::$names['search'].'_'.md5(serialize($query));
 
         // cache
@@ -44,7 +44,7 @@ class Search
                     foreach ($results as $key => $value)
                     {
                         // if comparison fails...
-                        if (!static::compare($value[$where['field']], $where['operator'], $where['value']))
+                        if (!static::compare(isset($value->$where['field']) ? $value->$where['field'] : null, $where['operator'], $where['value']))
                         {
                             // remove from array
                             unset($results[$key]);
@@ -56,12 +56,19 @@ class Search
                 foreach ($query->order_bys as $order_by)
                 {
                     // sort
-                    /*
-                    usort($results, function($a, $b) use ($order_by['field'], $order_by['value'])
+                    if (strtolower($order_by['value']) == 'desc')
+                    {
+                        /*
+                        usort($results, function($a, $b) use ($order_by['field'], $order_by['value'])
+                        {
+
+                        });
+                        */
+                    }
+                    else
                     {
 
-                    });
-                    */
+                    }
                 }
 
                 // slice the array
@@ -71,7 +78,8 @@ class Search
                 if ($query->take === 1) // strict match is deliberate
                 {
                     // flatten
-                    $results = $results[0];
+                    $results = array_values($results);
+                    $results = isset($results[0]) ? $results[0] : null;
                 }
             }
 
@@ -90,15 +98,26 @@ class Search
      */
     protected static function compare($value1, $operator, $value2)
     {
-        if ($operator == 'LIKE')
+        switch (strtolower($operator))
         {
-            // fancy operator compare
-            return preg_match('/'.$value2.'/i', $value1); // this might need some work
-        }
-        else
-        {
-            // normal operator compare
-            return version_compare($value1, $value2, $operator);
+            case 'like':
+                return preg_match('/'.$value2.'/i', $value1); // this might need some work
+                break;
+            case '=':
+                return $value1 == $value2;
+                break;
+            case '!=':
+                return $value1 != $value2;
+                break;
+            case '<':
+                return $value1 < $value2;
+                break;
+            case '>':
+                return $value1 > $value2;
+                break;
+            default:
+                return false;
+                break;
         }
     }
 }

@@ -23,6 +23,7 @@ class Cache
         'search' => 'scribe_search',
         'registry' => 'scribe_registry',
         'timer' => 'scribe_timer',
+        'text' => 'scribe_text'
     );
 
     /**
@@ -54,25 +55,56 @@ class Cache
      */
     public static function check()
     {
-        // if times up...
-        \Cache::remember(static::$names['timer'], \Config::get('scribe::scribe.refresh', 5), function()
+        // get refresh clock
+        $clock = \Config::get('scribe::scribe.refresh', 5);
+
+        // if cache is off...
+        if (!$clock)
         {
-            // detect changes
-            if (Compile::get_hash() != \Cache::get(static::$names['hash']))
+            // reset
+            static::reset();
+
+            // escape
+            return null;
+        }
+
+        // if times up...
+        \Cache::remember(static::$names['timer'], $clock, function()
+        {
+            // new hash
+            $new_hash = Compile::get_hash();
+
+            // old hash
+            $old_hash = \Cache::get(static::$names['hash']);
+
+            // if different...
+            if ($new_hash != $old_hash)
             {
-                // get register
-                $register = \Cache::get(static::$names['registry'], array());
+                // reset
+                static::reset();
 
-                // add names
-                $register = array_merge($register, static::$names);
-
-                // foreach cache...
-                foreach ($register as $name)
-                {
-                    // forget
-                    \Cache::forget($name);
-                }
+                // save most recent hash
+                \Cache::forever(static::$names['hash'], $new_hash);
             }
+
+            // return
+            return true;
         });
+    }
+
+    protected static function reset()
+    {
+        // get register
+        $register = \Cache::get(static::$names['registry'], array());
+
+        // add names
+        $register = array_merge($register, static::$names);
+
+        // foreach cache...
+        foreach ($register as $name)
+        {
+            // forget
+            \Cache::forget($name);
+        }
     }
 }

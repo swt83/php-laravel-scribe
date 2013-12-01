@@ -11,10 +11,34 @@
 
 namespace Travis\Scribe\Tools;
 
-abstract class File
+class File
 {
     public function text()
     {
+        // name
+        $cache = \Cache::$names['text'].'_'.md5($this->path);
 
+        // cache
+        return \Cache::rememberForever($cache, function() use ($cache)
+        {
+            // determine extension
+            $extension = \File::extension($this->path);
+
+            // based on mode...
+            if (strtolower($extension) == 'md')
+            {
+                $text = $document->getContent();
+            }
+            else
+            {
+                $text = $document->getHtmlContent();
+            }
+
+            // register
+            Cache::register($cache);
+
+            // return
+            return $text;
+        });
     }
 }

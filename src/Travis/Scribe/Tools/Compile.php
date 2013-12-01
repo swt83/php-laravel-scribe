@@ -113,10 +113,9 @@ class Compile
      * Return a parsed file.
      *
      * @param   string  $file
-     * @param   boolean $include_text
      * @return  array
      */
-    protected static function get_file($path, $include_text = false)
+    protected static function get_file($path)
     {
         // pull source
         $source = file_get_contents($path);
@@ -133,41 +132,35 @@ class Compile
         // save array
         $result = $document->get();
 
-        // if include text...
-        if ($include_text)
-        {
-            $mode = static::get_mode();
-            if ($mode == 'markdown')
-            {
-                $result['text'] = $document->getContent();
-            }
-            else
-            {
-                $result['text'] = $document->getHtmlContent();
-            }
-
-        }
-
         // We are going to do some of our own tidying of the data
         // before we send it back to the Search class.
 
-        // add path
-        $result['path'] = $path;
+        // new object
+        $file = new File;
 
-        // if tags...
-        if (isset($result['tags']))
+        // add known properties
+        foreach ($result as $key => $value)
         {
-            // split
-            $split = explode(',', $result['tags']);
-
-            // trim
-            foreach ($split as $key => $value) $split[$key] = trim($value);
-
-            // save
-            $result['tags'] = $split;
+            $field = \Str::slug($key, '_');
+            if (in_array($key, \Config::get('scribe::scribe.splits', array())))
+            {
+                $splits = explode(',', $value);
+                foreach ($splits as $key => $value)
+                {
+                    $splits[$key] = trim($value);
+                }
+                $file->$field = $splits;
+            }
+            else
+            {
+                $file->$field = $value;
+            }
         }
 
+        // add path
+        $file->path = $path;
+
         // return
-        return $result;
+        return $file;
     }
 }

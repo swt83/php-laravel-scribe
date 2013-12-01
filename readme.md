@@ -31,20 +31,20 @@ The query methods are written to try and mimic Eloquent:
 
 ```php
 
+// get all files
+$posts = Scribe::all();
+
 // get file by slug
 $page = Scribe::where('slug', '=', 'my_page')->first();
 
 // get file by date created
 $post = Scribe::order_by('date', 'desc')->take(1)->first();
 
-// get all posts
-$posts = Scribe::all();
-
-// get last 10 posts
-$posts = Scribe::where('category', '=', 'posts')->take(10)->get();
+// get last 10 files w/ category "post"
+$posts = Scribe::where('category', '=', 'post')->take(10)->get();
 
 // get last 10 posts w/ tag "foobar"
-$posts = Scribe::where('category', '=', 'posts')->where('tag', '=', 'foobar')->take(10)->get();
+$posts = Scribe::where('category', '=', 'post')->where('tag', '=', 'foobar')->take(10)->get();
 
 ```
 

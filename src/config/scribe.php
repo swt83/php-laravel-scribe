@@ -8,14 +8,14 @@ return array(
     'directory' => app_path().'/views/scribe/',
 
     #################################################
-    # Number of minutes before a content refresh.
+    # Number of minutes before a cache check.
     #################################################
-    'refresh' => 1,
+    'refresh' => isset($_SERVER['LARAVEL_ENV']) ? 10 : 0,
 
     #################################################
-    # Fields that should be considered as array.
+    # Field values that should be treated as arrays.
     #################################################
-    'fields_as_array' => array(
+    'splits' => array(
         'category',
         'tag',
     )
