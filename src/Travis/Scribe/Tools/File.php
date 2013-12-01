@@ -13,32 +13,27 @@ namespace Travis\Scribe\Tools;
 
 class File
 {
+    /**
+     * Return the text of a file.
+     *
+     * @return  string
+     */
     public function text()
     {
         // name
-        $cache = \Cache::$names['text'].'_'.md5($this->path);
+        $cache = Cache::$names['text'].'_'.md5($this->path);
 
         // cache
         return \Cache::rememberForever($cache, function() use ($cache)
         {
-            // determine extension
-            $extension = \File::extension($this->path);
-
-            // based on mode...
-            if (strtolower($extension) == 'md')
-            {
-                $text = $document->getContent();
-            }
-            else
-            {
-                $text = $document->getHtmlContent();
-            }
-
             // register
             Cache::register($cache);
 
-            // return
-            return $text;
+            // determine extension
+            $extension = \File::extension($this->path);
+
+            // return text
+            return Compile::get_file_text($this->path, $extension);
         });
     }
 }

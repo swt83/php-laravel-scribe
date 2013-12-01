@@ -163,4 +163,39 @@ class Compile
         // return
         return $file;
     }
+
+    /**
+     * Return the text from a file.
+     *
+     * @param   string  $path
+     * @param   string  $mode
+     * @return  string
+     */
+    public static function get_file_text($path, $mode)
+    {
+        // pull source
+        $source = file_get_contents($path);
+
+        // catch error
+        if (!$source) trigger_error('File not found.');
+
+        // initiate parser
+        $parser = new DocumentParser;
+
+        // parse document
+        $document = $parser->parse($source);
+
+        // based on mode...
+        if (strtolower($mode) == 'md')
+        {
+            $text = $document->getContent();
+        }
+        else
+        {
+            $text = $document->getHtmlContent();
+        }
+
+        // return
+        return $text;
+    }
 }
