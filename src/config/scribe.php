@@ -3,18 +3,21 @@
 return array(
 
     #################################################
-    # Location of files.
+    # Location of content files.
     #################################################
-    'directory' => app_path().'/views/scribe/', // ending slash is important
+    'directory' => app_path().'/views/scribe/',
 
     #################################################
-    # Chances of master record recompile.
+    # Number of minutes before a content refresh.
     #################################################
-    'lottery' => array(2, 100),
+    'refresh' => 1,
 
     #################################################
-    # Chances of cache reset.
+    # Fields that should be considered as array.
     #################################################
-    'mode' => 'markdown',
+    'fields_as_array' => array(
+        'category',
+        'tag',
+    )
 
 );

@@ -21,17 +21,11 @@ class Search
      */
     public static function run($query)
     {
-        // We're going to cache search results to keep the system
-        // from having to do array crunching every pageload.
+        // hash
+        $cache = Cache::$names['search'].'_'.md5(serialize($query));
 
-        // build cache name
-        $cache = 'scribe_search_'.md5(serialize($query));
-
-        // load from cache
-        $results = \Cache::get($cache);
-
-        // if not found...
-        if (!$results or 1)
+        // cache
+        return \Cache::rememberForever($cache, function() use ($cache, $query)
         {
             // get master record of all posts
             $results = Compile::run();
@@ -58,9 +52,16 @@ class Search
                     }
                 }
 
+                // foreach orderby...
                 foreach ($query->order_bys as $order_by)
                 {
+                    // sort
+                    /*
+                    usort($results, function($a, $b) use ($order_by['field'], $order_by['value'])
+                    {
 
+                    });
+                    */
                 }
 
                 // slice the array
@@ -74,12 +75,12 @@ class Search
                 }
             }
 
-            // save results
-            \Cache::put($cache, $results, 5);
-        }
+            // register
+            Cache::register($cache);
 
-        // return
-        return $results;
+            // return
+            return $results;
+        });
     }
 
     /**
@@ -89,6 +90,15 @@ class Search
      */
     protected static function compare($value1, $operator, $value2)
     {
-        return version_compare($value1, $value2, $operator);
+        if ($operator == 'LIKE')
+        {
+            // fancy operator compare
+            return preg_match('/'.$value2.'/i', $value1); // this might need some work
+        }
+        else
+        {
+            // normal operator compare
+            return version_compare($value1, $value2, $operator);
+        }
     }
 }

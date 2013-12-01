@@ -50,6 +50,8 @@ $posts = Scribe::where('category', '=', 'posts')->where('tag', '=', 'foobar')->t
 
 Just note that the fields used in the ``where()`` and ``order_by()`` methods are dependant on those fields being available in your files!  If a file does not have the field in question a default of ``null`` will be assumed.
 
+The search results will deliver an object that contains all the information available from the file.
+
 ### Under the Hood
 
 The system relies heavily on caching.  It builds a master array of all data from all posts and uses that array to calculate search results.  This master array is cached, as are all search results, and will be remembered forever.  However, the system periodically checks the hash of the content directory to detect changes, and if discovered, the caches will be reset and rebuilt.

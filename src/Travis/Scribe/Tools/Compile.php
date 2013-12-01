@@ -15,37 +15,53 @@ use Kurenai\DocumentParser;
 
 class Compile
 {
-
+    /**
+     * Return master array of all posts.
+     *
+     * @return  array
+     */
     public static function run()
     {
-        // load dir
-        $dir = static::get_dir();
-
-        // get list of all files
-        $files = static::get_files($dir);
-
-        // foreach file...
-        $master = array();
-        foreach ($files as $file)
+        // cache
+        return \Cache::rememberForever(Cache::$names['master'], function()
         {
-            // parse
-            $parse = static::get_file($file);
+            // get list of all files
+            $files = static::get_files();
 
-            // if successful...
-            if ($parse)
+            // foreach file...
+            $master = array();
+            foreach ($files as $file)
             {
-                // save to master array
-                $master[] = $parse;
-            }
-        }
+                // parse
+                $parse = static::get_file($file);
 
-        // return
-        return $master;
+                // if successful...
+                if ($parse)
+                {
+                    // save to master array
+                    $master[] = $parse;
+                }
+            }
+
+            // return
+            return $master;
+        });
     }
 
-    protected static function get_hash_dir()
+    /**
+     * Return a hash value for all files.
+     *
+     * @return  string
+     */
+    public static function get_hash()
     {
-        return md5_dir(static::get_dir());
+        $hashes = array();
+        foreach (static::get_files() as $file)
+        {
+            $hashes[] = md5_file($file);
+        }
+
+        return md5(serialize($hashes));
     }
 
     /**
@@ -66,31 +82,17 @@ class Compile
     }
 
     /**
-     * Return a mode for a file (markdown or HTML).
-     *
-     * @return  string
-     */
-    protected static function get_mode()
-    {
-        // load config
-        $mode = \Config::get('scribe::scribe.mode');
-
-        // catch error
-        if (!$mode) trigger_error('Config file not setup properly.');
-
-        // return
-        return strtolower($mode);
-    }
-
-    /**
      * Return an array of all content files.
      *
      * @param   string  $dir
      * @param   array   $files
      * @return  array
      */
-    protected static function get_files($dir, $files = array())
+    protected static function get_files($dir = null, $files = array())
     {
+        // get default dir
+        if (!$dir) $dir = static::get_dir();
+
         // add new files to master
         $new_files = \File::files($dir);
         $files = array_merge($files, $new_files);

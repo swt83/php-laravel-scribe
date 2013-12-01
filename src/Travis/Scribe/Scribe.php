@@ -22,6 +22,9 @@ class Scribe
      */
     public static function __callStatic($method, $args)
     {
+        // check for changes
+        Tools\Cache::check();
+
         // initiate query builder
         $object = new Tools\Query;
 
