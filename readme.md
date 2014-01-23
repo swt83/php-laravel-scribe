@@ -1,12 +1,22 @@
-# Scribe for Laravel
+# Scribe
 
-A Laravel package for building a file-based blog. This is a not a "static file" blogging system that crunches files together into raw HTML, rather it's a blogging system that just doesn't use a database. Some technical know-how is still required by the user, but this library aims to take most of the work out of the process.
-
-**WARNING: This is my first package using Composer and Laravel 4. Please forgive me while I learn.**
+A Laravel PHP package for building a file-based blog. This is a not a "static file" blogging system that crunches files together into raw HTML, rather it's a blogging system that just doesn't use a database.
 
 ## Install
 
-Normal composer install.
+Normal install via Composer.
+
+### Provider
+
+Register the service provider in your ``app/config/app.php`` file:
+
+```php
+'Travis\Scribe\Provider',
+```
+
+### Config
+
+Copy the config file to ``app/config/packages/travis/scribe/config.php`` and input the necessary information.
 
 ## Usage
 
@@ -32,19 +42,19 @@ The query methods are written to try and mimic Eloquent:
 ```php
 
 // get all files
-$posts = Scribe::all();
+$posts = Travis\Scribe::all();
 
 // get file by slug
-$page = Scribe::where('slug', '=', 'my_page')->first();
+$page = Travis\Scribe::where('slug', '=', 'my_page')->first();
 
 // get file by date created
-$post = Scribe::order_by('date', 'desc')->take(1)->first();
+$post = Travis\Scribe::order_by('date', 'desc')->take(1)->first();
 
 // get last 10 files w/ category "post"
-$posts = Scribe::where('category', '=', 'post')->take(10)->get();
+$posts = Travis\Scribe::where('category', '=', 'post')->take(10)->get();
 
 // get last 10 posts w/ tag "foobar"
-$posts = Scribe::where('category', '=', 'post')->where('tag', '=', 'foobar')->take(10)->get();
+$posts = Travis\Scribe::where('category', '=', 'post')->where('tag', '=', 'foobar')->take(10)->get();
 
 ```
 
