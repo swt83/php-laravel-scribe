@@ -1,18 +1,9 @@
 <?php
 
-/**
- * A Laravel package for building a file-based blog.
- *
- * @package    swt83/php-laravel-scribe
- * @author     Scott Travis <scott@swt83.com>
- * @link       http://github.com/swt83/php-laravel-scribe
- * @license    MIT License
- */
+namespace Travis;
 
-namespace Travis\Scribe;
+class Scribe {
 
-class Scribe
-{
     /**
      * Magic method to build query and ultimately return results.
      *
@@ -23,12 +14,13 @@ class Scribe
     public static function __callStatic($method, $args)
     {
         // check for changes
-        Tools\Cache::check();
+        Scribe\Cache::check();
 
         // initiate query builder
-        $object = new Tools\Query;
+        $object = new Scribe\Query;
 
         // return object
         return call_user_func_array(array($object, $method), $args);
     }
+
 }

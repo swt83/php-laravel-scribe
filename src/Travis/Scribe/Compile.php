@@ -1,20 +1,11 @@
 <?php
 
-/**
- * A Laravel package for building a file-based blog.
- *
- * @package    swt83/php-laravel-scribe
- * @author     Scott Travis <scott@swt83.com>
- * @link       http://github.com/swt83/php-laravel-scribe
- * @license    MIT License
- */
-
-namespace Travis\Scribe\Tools;
+namespace Travis\Scribe;
 
 use Kurenai\DocumentParser;
 
-class Compile
-{
+class Compile {
+
     /**
      * Return master array of all posts.
      *
@@ -198,4 +189,5 @@ class Compile
         // return
         return $text;
     }
+
 }
