@@ -129,6 +129,9 @@ class Compile {
         // new object
         $file = new File;
 
+        // add slug
+        $file->slug = isset($result['title']) ? \Str::slug($result['title']) : null;
+
         // add known properties
         foreach ($result as $key => $value)
         {
@@ -179,11 +182,11 @@ class Compile {
         // based on mode...
         if (strtolower($mode) == 'md')
         {
-            $text = $document->getContent();
+            $text = $document->getHtmlContent();
         }
         else
         {
-            $text = $document->getHtmlContent();
+            $text = $document->getContent();
         }
 
         // return
