@@ -60,7 +60,7 @@ class Search {
                     {
                         usort($results, function($a, $b) use ($field)
                         {
-                            return $a->$field > $b->$field ? 1 : 0;
+                            return $a->$field > $b->$field ? 0 : 1;
                         });
                     }
 
@@ -69,7 +69,7 @@ class Search {
                     {
                         usort($results, function($a, $b) use ($field)
                         {
-                            return $a->$field > $b->$field ? 0 : 1;
+                            return $a->$field > $b->$field ? 1 : 0;
                         });
                     }
                 }

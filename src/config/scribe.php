@@ -16,8 +16,8 @@ return array(
     # Field values that should be treated as arrays.
     #################################################
     'splits' => array(
-        'category',
-        'tag',
+        'categories',
+        'tags',
     )
 
 );
