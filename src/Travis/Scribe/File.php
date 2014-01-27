@@ -20,11 +20,17 @@ class File {
             // register
             Cache::register($cache);
 
-            // determine extension
-            $extension = \File::extension($this->path);
+            // capture
+            $text = Compile::get_file_text($this->path);
 
-            // return text
-            return Compile::get_file_text($this->path, $extension);
+            // filter
+            $filters = \Config::get('scribe::filters', array());
+            $find = array_keys($filters);
+            $replace = array_values($filters);
+            $text = str_ireplace($find, $replace, $text);
+
+            // return
+            return $text;
         });
     }
 

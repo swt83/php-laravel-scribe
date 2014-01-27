@@ -63,7 +63,7 @@ class Compile {
     protected static function get_dir()
     {
         // load config
-        $dir = \Config::get('scribe::scribe.directory');
+        $dir = \Config::get('scribe::directory');
 
         // catch error
         if (!$dir) trigger_error('Config file not setup properly.');
@@ -136,7 +136,7 @@ class Compile {
         foreach ($result as $key => $value)
         {
             $field = \Str::slug($key, '_');
-            if (in_array($key, \Config::get('scribe::scribe.splits', array())))
+            if (in_array($key, \Config::get('scribe::splits', array())))
             {
                 $splits = explode(',', $value);
                 foreach ($splits as $key => $value)
@@ -162,10 +162,9 @@ class Compile {
      * Return the text from a file.
      *
      * @param   string  $path
-     * @param   string  $mode
      * @return  string
      */
-    public static function get_file_text($path, $mode)
+    public static function get_file_text($path)
     {
         // pull source
         $source = file_get_contents($path);
@@ -179,8 +178,11 @@ class Compile {
         // parse document
         $document = $parser->parse($source);
 
+        // determine extension
+        $extension = \File::extension($path);
+
         // based on mode...
-        if (strtolower($mode) == 'md')
+        if (strtolower($extension) == 'md')
         {
             $text = $document->getHtmlContent();
         }

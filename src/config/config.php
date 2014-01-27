@@ -16,8 +16,16 @@ return array(
     # Field values that should be treated as arrays.
     #################################################
     'splits' => array(
-        'categories',
-        'tags',
+        'category',
+        'tag',
+    ),
+
+    #################################################
+    # Filters to find and replace text.
+    #################################################
+    'filters' => array(
+        '<p><code>' => '<pre>',
+        '</code></p>' => '</pre>'
     )
 
 );

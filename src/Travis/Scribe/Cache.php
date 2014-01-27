@@ -47,7 +47,7 @@ class Cache {
     public static function check()
     {
         // get refresh clock
-        $clock = \Config::get('scribe::scribe.refresh', 5);
+        $clock = \Config::get('scribe::refresh', 5);
 
         // if cache is off...
         if (!$clock)
